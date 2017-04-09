@@ -1,12 +1,12 @@
 # MBTA Performance API
 
-1.[Origins](#Origins)
-2.[Challenges](#Challenges)
-3.[Consolidation Strategy](#Consolidation Strategy)
-4.[Project Structure](#Project Structure)
-5.[Conclusions](#Conclusions)
+1. [Origins](#origins)
+2. [Challenges](#challenges)
+3. [Consolidation Strategy](#consolidation)
+4. [Project Structure](#project)
+5. [Conclusions](#conclusions)
 
-## Origins
+## Origins <a name="origins"></a>
 
 Anyone who has ever commuted by subway (NY, DC, Boston, etc.) will have run into
 mystery delays. Whether on the platform, or in a train, the delays are sudden,
@@ -30,7 +30,7 @@ previously thought. I therefore shifted the goal of the project to be
 simplifying data extraction from the MBTA API, and putting the data in a form
 that would actually be useful during further analysis.
 
-## Challenges
+## Challenges <a name="challenges"></a>
 
 To understand the data challenges, let me first lay out the structure of the
 data in the MBTA API. Fundamentally, as a train travels through the system, it
@@ -67,7 +67,7 @@ Unfortunately, train data can be somewhat sparse between some station pairs for
 some reason. This means that chaining will produce many train fragments that
 ideally would be connected into single trains.
 
-## Consolidation Strategy
+## Consolidation Strategy <a name="consolidation"</a>
 
 To tackle the first challenge (chaining the right train segments efficiently and
 correctly out of thousands of possible combinations), fortunately the MBTA API
@@ -112,7 +112,7 @@ to look at the back end of the list of trains that have been constructed for
 another train matching these conditions. The search aborts if the trains
 searched are too far back in time (1 hr between start and end time). 
 
-## Project Structure
+## Project Structure <a name="project"></a>
 
 Using these strategies, I developed `mbta_performance` as a python-module that
 allows an interested data scientist to easily pull data from the MBTA API, and
@@ -188,4 +188,5 @@ in each leg of the train's journey through the line.
 `tc.median_train.total_travel_time` can then give a baseline estimate of the
 total travel time through the system for further analysis.
 
+## Conclusions <a name="conclusions"></a>
 
