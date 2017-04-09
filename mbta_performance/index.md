@@ -76,9 +76,28 @@ schematic is shown below.
 Here, `t0_0` is the earliest available departure time, so that time will be
 popped first. The following segments are iterated over, and matching times (in
 red) are popped as well until a matching time is not found, or the end of
-the line is reached.
+the line is reached. The next earliest train can then be constructed from the
+remaining times.
+
+Because of missing travel time information, only part of a train's total journey
+can be consolidated through chaining, yielding a train fragment. Fortunately,
+the same train typically "reappears" later in the line, and the two segments
+just have to be connected again. A typical situation like this is shown below.
 
 ![image](figures/train combination.svg)
+
+Several conditions are required to be met to connect the fragments:
+
+1. The start of the second train must be later in the line than the end of the
+first train.
+2. The start and end must be less than four track segments from each other (it's
+easy to connect data that's close temporally and spatially).
+3. If the trains' start and end are one track segment from each other, the
+travel time in that track must be in the range [0s, 180s]. The 0s lower bound is
+allowed because sometimes the missing travel time is incorrectly added to the
+stop time information from the previous stop.
+4. If the trains' start and end are more than one track segment from each other,
+the average travel time per track segment must be between [60s, 180s].
 
 ## Project Structure
 
