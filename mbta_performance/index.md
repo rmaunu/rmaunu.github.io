@@ -61,4 +61,17 @@ fragments that ideally would be connected into single trains.
 
 ## Consolidation Strategy
 
+To tackle the first challenge (chaining the right train segments efficiently and
+correctly out of thousands of possible combinations), fortunately the MBTA API
+yields time ordered train events. If you start with the earliest possible train
+segment, you only have to look near the front of the list of train events in other
+segments to do the matching. These matching segments can then be removed from
+the list so you don't waste time later with these already-used segments. As this
+is a largely pop-from-front process, a `deque` of train events in each track
+segment and stop is used and makes the chaining process efficient. An idealized
+schematic is shown below.
+
+![image](figures/time data flow.png)
+
+## Project Structure
 
