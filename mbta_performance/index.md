@@ -174,7 +174,7 @@ train's starting stop at index `1`, and the ending stop index at `2`.
 To visualize the performance of an ensemble of trains, please see
 `TrainCollection.plot_trains`. This method results figures like:
 
-![image](data/example_plots/Orange_travel_time.png)
+![image](figures/Orange_travel_time.png)
 
 Finally, and "average" train for the ensemble is accessible with
 `tc.median_train`. This train contains the median travel times and dwell times
