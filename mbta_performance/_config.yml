@@ -1,12 +1,3 @@
 theme: jekyll-theme-cayman
 title: MBTA Data
 description: What insights can be drawn from MBTA historical performance data?
-#description: Simplifying and consolidating MBTA performance data 
-
-baseurl: ""
-paginate: 1
-
-# About/contact
-author:
-  name: Ryan Maunu
-  url: http://icecube.umd.edu/~rmaunu/pub
