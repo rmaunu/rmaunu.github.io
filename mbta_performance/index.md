@@ -71,14 +71,14 @@ is a largely pop-from-front process, a `deque` of train events in each track
 segment and stop is used and makes the chaining process efficient. An idealized
 schematic is shown below.
 
-![image](figures/time data flow.png)
+![image](figures/time data flow.svg)
 
 Here, `t0_0` is the earliest available departure time, so that time will be
 popped first. The following segments are iterated over, and matching times (in
 red) are popped as well until a matching time is not found, or the end of
 the line is reached.
 
-![image](figures/train combination.png)
+![image](figures/train combination.svg)
 
 ## Project Structure
 
