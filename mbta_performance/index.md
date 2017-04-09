@@ -1,5 +1,11 @@
 # MBTA Performance API
 
+1.[Origins](#Origins)
+2.[Challenges](#Challenges)
+3.[Consolidation Strategy](#Consolidation Strategy)
+4.[Project Structure](#Project Structure)
+5.[Conclusions](#Conclusions)
+
 ## Origins
 
 Anyone who has ever commuted by subway (NY, DC, Boston, etc.) will have run into
@@ -176,7 +182,7 @@ To visualize the performance of an ensemble of trains, please see
 
 ![image](figures/Orange_travel_time.png)
 
-Finally, and "average" train for the ensemble is accessible with
+Finally, an "average" train for the ensemble is accessible with
 `tc.median_train`. This train contains the median travel times and dwell times
 in each leg of the train's journey through the line.
 `tc.median_train.total_travel_time` can then give a baseline estimate of the
