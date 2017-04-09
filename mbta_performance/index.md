@@ -68,7 +68,7 @@ Unfortunately, train data can be somewhat sparse between some station pairs for
 some reason. This means that chaining will produce many train fragments that
 ideally would be connected into single trains.
 
-<a name="consolidation"</a>
+<a name="consolidation"></a>
 ## Consolidation Strategy 
 
 To tackle the first challenge (chaining the right train segments efficiently and
@@ -194,3 +194,8 @@ total travel time through the system for further analysis.
 <a name="conclusions"></a>
 ## Conclusions 
 
+The result of this project is a python module that allows easy analysis of MBTA
+train performance data. Though MBTA's API has the necessary data, it is not in a
+form that allows straight-forward, per-train analyses over the entire train
+line. My module gives the user an interface to access the data desired from
+MBTA, and consolidates it into this per-train form.
