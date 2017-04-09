@@ -9,13 +9,15 @@ full information about the situation. The MBTA of Boston may indicate the cause
 of the delay over their alert feed, and may describe the delays in vague terms
 like "minor" or "moderate", but what do those terms actually mean? 
 
-When I began this short project, I had the goal of quantifying these qualitative
-terms to their actual affects on riders' commutes. Or perhaps modeling expected
-delays due to different weather conditions. After exploring the data available
-from different transit authorities, I found that the MBTA of Boston had a web
-API that yields historical train performance data. Nice, no need to scrape
-real-time data for months on end! I thought it'd be fairly straight forward to
-jump right into the modeling after a little data consolidation...
+In a short two-week project to approach a data problem using good
+object-oriented coding practices, I had the goal of quantifying the se
+qualitative terms to their actual affects on riders' commutes. Or perhaps
+modeling expected delays due to different weather conditions. After exploring
+the data available from different transit authorities, I found that the MBTA of
+Boston had a web API that yields historical train performance data. Nice, no
+need to scrape real-time data for months on end! I thought it'd be 
+straight-forward to jump right into the modeling after a little data
+consolidation...
 
 The data available turned out to be much more challenging to wrangle than
 previously thought. I therefore shifted the goal of the project to be
@@ -54,10 +56,10 @@ and stop time files). The primary challenge here is to efficiently do
 this chaining if you have a dataset with thousands of possible matching
 segments.
 
-This procedure would be fairly straight forward if the train data were fully
-populated. Unfortunately, train data can be somewhat sparse between some station
-pairs for some reason. This means that chaining will produce many train
-fragments that ideally would be connected into single trains.
+This procedure would be fairly trivial if the train data were fully populated.
+Unfortunately, train data can be somewhat sparse between some station pairs for
+some reason. This means that chaining will produce many train fragments that
+ideally would be connected into single trains.
 
 ## Consolidation Strategy
 
@@ -99,5 +101,85 @@ stop time information from the previous stop.
 4. If the trains' start and end are more than one track segment from each other,
 the average travel time per track segment must be between [60s, 180s].
 
+Because the previous trains have been produced in time-order, you simply have
+to look at the back end of the list of trains that have been constructed for
+another train matching these conditions. The search aborts if the trains
+searched are too far back in time (1 hr between start and end time). 
+
 ## Project Structure
+
+Using these strategies, I developed `mbta_performance` as a python-module that
+allows an interested data scientist to easily pull data from the MBTA API, and
+does the data consolidation to allow more straight-forward analyses to be
+performed
+
+The base class to allow an MBTA analysis is
+`mbta_performance.train.TrainCollection`. This class will allow the user to
+download subway performance data, compiled into individual trains. These trains
+can then be used for further analyses (e.g. MBTA delay announcement
+responsiveness, delay magnitude prediction based on weather, etc.).
+
+To start an analysis, simply `import mbta_performance`, and load a line:
+```python
+tc = mbta_performance.train.TrainCollection ()
+tc.load_base_train (mbta_performance.train.lines.<line>)
+```
+The train direction can also be set by the `direction_id` tag ("0" or "1").
+Using `datetime` objects, train performance data can be downloaded from the MBTA
+API by:
+```python
+tc.set_data_path (<directory to download data to>)
+tc.get_times (start_datetime, end_datetime)
+```
+
+Once this is done, the obtained files can be loaded for analysis:
+```python
+tc.load_times ()
+```
+
+Based on these files, `Train` objects are created, representing the path of a
+single MBTA train through the line:
+```python
+tc.load_trains (num_trains=<desired train collection size>)
+```
+These trains are available at `tc.trains`. Each `Train` (e.g. `t =
+tc.trains[0]`) is a collection of `TrainStop` objects (`t.stops`) and
+`TrainTrack` objects (`t.tracks`), which hold information on the time the train
+encountered that segment of its journey. All trains in the collection can be
+iterated through by either `for t in tc` or `for t in tc.trains`.
+`TrainCollection` objects further support slicing, where `tc[:100]` would return a
+`TrainCollection` with only the first 100 `Train` objects.
+
+Please note that because of missing information, a single `Train` may not have
+information across the entire line. The interval over which the Train has data
+(not necessarily complete) can be assessed through `t.start` and `t.end`,
+which point to the starting point and ending point of the train data. This
+interval can easily be traversed by iterating over the train, for example:
+```python
+for p in t:
+    ...
+```
+This will access all `TrainStop` objects and `TrainTrack` objects between the
+start and end, in line-order (alternating stops and tracks).
+
+A specific segment of a given train can be easily accessed from the usual
+`python` slice syntax. For example, `t[3:8]` would yield a train defined between
+the 3rd and 7th stop in the train's route.
+
+Perhaps the single most important metric for a single train is its end-to-end
+travel time. This can be obtained through `t.total_travel_time`. This will
+return a `tuple` containing the total travel time in seconds at index `0`, the
+train's starting stop at index `1`, and the ending stop index at `2`.
+
+To visualize the performance of an ensemble of trains, please see
+`TrainCollection.plot_trains`. This method results figures like:
+
+![image](data/example_plots/Orange_travel_time.png)
+
+Finally, and "average" train for the ensemble is accessible with
+`tc.median_train`. This train contains the median travel times and dwell times
+in each leg of the train's journey through the line.
+`tc.median_train.total_travel_time` can then give a baseline estimate of the
+total travel time through the system for further analysis.
+
 
